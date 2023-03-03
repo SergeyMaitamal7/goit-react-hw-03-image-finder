@@ -40,15 +40,16 @@ export class App extends Component {
         });
         const { hits, totalHits } = await apiImages(query, page, perPage);
         if (totalHits === 0) {
-          this.setState({
-            arrayImg: [],
-          });
           Notify.failure(
             'Sorry, there are no images matching your search query. Please try again.'
           );
-        } else {
-          this.setState(({ arreaImg }) => ({
+        } else if (prevState.query !== query) {
+          this.setState(({ arrayImg }) => ({
             arrayImg: [...hits],
+          }));
+        } else {
+          this.setState(({ arrayImg }) => ({
+            arrayImg: [...prevState.arrayImg, ...hits],
           }));
         }
       } catch (error) {
@@ -57,6 +58,7 @@ export class App extends Component {
         this.setState({
           loader: false,
         });
+        return;
       }
     }
   }
@@ -90,7 +92,7 @@ export class App extends Component {
             сlick={this.handleLargeImage}
           ></ImageGallery>
         )}
-        {arrayImg.length === perPage && (
+        {arrayImg.length >= perPage && (
           <Button onLoadMore={this.handleButtonLoadMore}>Load more</Button>
         )}
         {shouModal && (
@@ -101,26 +103,3 @@ export class App extends Component {
     );
   }
 }
-//   apiImages(query, page, perPage)
-//     .then(({ hits, totalHits }) => {
-//       if (totalHits === 0) {
-//         this.setState({
-//           arrayImg: [],
-//         });
-//         Notify.failure(
-//           'Sorry, there are no images matching your search query. Please try again.'
-//         );
-//       } else {
-//         this.setState(({ arreaImg }) => ({
-//           arrayImg: [...hits],
-//         }));
-//       }
-//     })
-//     .catch(error => console.log(error))
-//     .finally(
-//       this.setState({
-//         loader: false,
-//       })
-//     );
-//   return;
-// }

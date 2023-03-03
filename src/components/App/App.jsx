@@ -55,33 +55,10 @@ export class App extends Component {
         console.log(error);
       } finally {
         this.setState({
-          isLoading: false,
+          loader: false,
         });
       }
     }
-    //   apiImages(query, page, perPage)
-    //     .then(({ hits, totalHits }) => {
-    //       if (totalHits === 0) {
-    //         this.setState({
-    //           arrayImg: [],
-    //         });
-    //         Notify.failure(
-    //           'Sorry, there are no images matching your search query. Please try again.'
-    //         );
-    //       } else {
-    //         this.setState(({ arreaImg }) => ({
-    //           arrayImg: [...hits],
-    //         }));
-    //       }
-    //     })
-    //     .catch(error => console.log(error))
-    //     .finally(
-    //       this.setState({
-    //         loader: false,
-    //       })
-    //     );
-    //   return;
-    // }
   }
 
   toggleModal = () => {
@@ -124,3 +101,26 @@ export class App extends Component {
     );
   }
 }
+//   apiImages(query, page, perPage)
+//     .then(({ hits, totalHits }) => {
+//       if (totalHits === 0) {
+//         this.setState({
+//           arrayImg: [],
+//         });
+//         Notify.failure(
+//           'Sorry, there are no images matching your search query. Please try again.'
+//         );
+//       } else {
+//         this.setState(({ arreaImg }) => ({
+//           arrayImg: [...hits],
+//         }));
+//       }
+//     })
+//     .catch(error => console.log(error))
+//     .finally(
+//       this.setState({
+//         loader: false,
+//       })
+//     );
+//   return;
+// }

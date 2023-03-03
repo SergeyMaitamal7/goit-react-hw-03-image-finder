@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import { fetchImages } from 'api/Api';
+import { apiImages } from 'api/Api';
 import { Searchbar } from 'components/Searchbar/Searchbar';
 import { ImageGallery } from 'components/ImageGallery/ImageGallery';
 import { Modal } from 'components/Modal/Modal';
@@ -8,6 +8,7 @@ import { Loader } from 'components/Loader/Loader';
 import { Button } from 'components/Button/Button';
 import { Container } from './App.styled';
 import { Notify } from 'notiflix/build/notiflix-notify-aio';
+import axios from 'axios';
 
 export class App extends Component {
   state = {
@@ -30,35 +31,57 @@ export class App extends Component {
     loader: PropTypes.bool,
   };
 
-  componentDidUpdate(prevProps, prevState) {
-    const { query, page, perPage, arrayImg } = this.state;
+  async componentDidUpdate(prevProps, prevState) {
+    const { query, page, perPage } = this.state;
     if (prevState.page !== page || prevState.query !== query) {
-      this.setState({
-        loader: true,
-      });
-      fetchImages(query, page, perPage)
-        .then(({ data }) => {
-          if (data.totalHits === 0) {
-            this.setState({
-              arrayImg: [],
-            });
-            Notify.failure(
-              'Sorry, there are no images matching your search query. Please try again.'
-            );
-          } else {
-            this.setState(({ arreaImg }) => ({
-              arrayImg: [...data.hits],
-            }));
-          }
-        })
-        .catch(error => console.log(error))
-        .finally(
+      try {
+        this.setState({
+          loader: true,
+        });
+        const { hits, totalHits } = await apiImages(query, page, perPage);
+        if (totalHits === 0) {
           this.setState({
-            loader: false,
-          })
-        );
-      return;
+            arrayImg: [],
+          });
+          Notify.failure(
+            'Sorry, there are no images matching your search query. Please try again.'
+          );
+        } else {
+          this.setState(({ arreaImg }) => ({
+            arrayImg: [...hits],
+          }));
+        }
+      } catch (error) {
+        console.log(error);
+      } finally {
+        this.setState({
+          isLoading: false,
+        });
+      }
     }
+    //   apiImages(query, page, perPage)
+    //     .then(({ hits, totalHits }) => {
+    //       if (totalHits === 0) {
+    //         this.setState({
+    //           arrayImg: [],
+    //         });
+    //         Notify.failure(
+    //           'Sorry, there are no images matching your search query. Please try again.'
+    //         );
+    //       } else {
+    //         this.setState(({ arreaImg }) => ({
+    //           arrayImg: [...hits],
+    //         }));
+    //       }
+    //     })
+    //     .catch(error => console.log(error))
+    //     .finally(
+    //       this.setState({
+    //         loader: false,
+    //       })
+    //     );
+    //   return;
+    // }
   }
 
   toggleModal = () => {

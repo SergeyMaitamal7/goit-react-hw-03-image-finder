@@ -19,6 +19,7 @@ export class App extends Component {
     shouModal: false,
     largeUrl: null,
     loader: false,
+    shouBtn: false,
   };
 
   static propTypes = {
@@ -32,7 +33,7 @@ export class App extends Component {
   };
 
   async componentDidUpdate(prevProps, prevState) {
-    const { query, page, perPage } = this.state;
+    const { query, page, perPage, shouBtn, arrayImg } = this.state;
     if (prevState.page !== page || prevState.query !== query) {
       try {
         this.setState({
@@ -43,13 +44,11 @@ export class App extends Component {
           Notify.failure(
             'Sorry, there are no images matching your search query. Please try again.'
           );
-        } else if (prevState.query !== query) {
-          this.setState(({ arrayImg }) => ({
-            arrayImg: [...hits],
-          }));
+          return;
         } else {
-          this.setState(({ arrayImg }) => ({
+          this.setState(({ arrayImg, shouBtn }) => ({
             arrayImg: [...prevState.arrayImg, ...hits],
+            shouBtn: page < Math.ceil(totalHits / 12),
           }));
         }
       } catch (error) {
@@ -82,7 +81,8 @@ export class App extends Component {
   };
 
   render() {
-    const { arrayImg, shouModal, largeUrl, loader, perPage } = this.state;
+    const { arrayImg, shouModal, largeUrl, loader, perPage, shouBtn } =
+      this.state;
     return (
       <Container>
         <Searchbar submit={this.handleSubmit}></Searchbar>
@@ -92,7 +92,7 @@ export class App extends Component {
             сlick={this.handleLargeImage}
           ></ImageGallery>
         )}
-        {arrayImg.length >= perPage && (
+        {shouBtn && (
           <Button onLoadMore={this.handleButtonLoadMore}>Load more</Button>
         )}
         {shouModal && (

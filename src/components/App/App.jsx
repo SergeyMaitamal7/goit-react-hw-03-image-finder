@@ -16,10 +16,10 @@ export class App extends Component {
     page: 1,
     perPage: 12,
     arrayImg: [],
-    shouModal: false,
+    showModal: false,
     largeUrl: null,
     loader: false,
-    shouBtn: false,
+    showBtn: false,
   };
 
   static propTypes = {
@@ -33,7 +33,7 @@ export class App extends Component {
   };
 
   async componentDidUpdate(prevProps, prevState) {
-    const { query, page, perPage, shouBtn, arrayImg } = this.state;
+    const { query, page, perPage, showBtn, arrayImg } = this.state;
     if (prevState.page !== page || prevState.query !== query) {
       try {
         this.setState({
@@ -46,9 +46,9 @@ export class App extends Component {
           );
           return;
         } else {
-          this.setState(({ arrayImg, shouBtn }) => ({
+          this.setState(({ arrayImg, showBtn }) => ({
             arrayImg: [...prevState.arrayImg, ...hits],
-            shouBtn: page < Math.ceil(totalHits / 12),
+            showBtn: page < Math.ceil(totalHits / 12),
           }));
         }
       } catch (error) {
@@ -63,11 +63,11 @@ export class App extends Component {
   }
 
   toggleModal = () => {
-    this.setState(({ shouModal }) => ({ shouModal: !shouModal }));
+    this.setState(({ showModal }) => ({ showModal: !showModal }));
   };
 
   handleLargeImage = image => {
-    this.setState({ largeUrl: image.largeImageURL, shouModal: true });
+    this.setState({ largeUrl: image.largeImageURL, showModal: true });
   };
 
   handleSubmit = ({ query }) => {
@@ -81,7 +81,7 @@ export class App extends Component {
   };
 
   render() {
-    const { arrayImg, shouModal, largeUrl, loader, perPage, shouBtn } =
+    const { arrayImg, showModal, largeUrl, loader, perPage, showBtn } =
       this.state;
     return (
       <Container>
@@ -92,10 +92,10 @@ export class App extends Component {
             сlick={this.handleLargeImage}
           ></ImageGallery>
         )}
-        {shouBtn && (
+        {showBtn && (
           <Button onLoadMore={this.handleButtonLoadMore}>Load more</Button>
         )}
-        {shouModal && (
+        {showModal && (
           <Modal onClose={this.toggleModal} largeUrl={largeUrl}></Modal>
         )}
         {loader && <Loader></Loader>}

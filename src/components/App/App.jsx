@@ -8,7 +8,6 @@ import { Loader } from 'components/Loader/Loader';
 import { Button } from 'components/Button/Button';
 import { Container } from './App.styled';
 import { Notify } from 'notiflix/build/notiflix-notify-aio';
-import axios from 'axios';
 
 export class App extends Component {
   state = {
@@ -33,7 +32,7 @@ export class App extends Component {
   };
 
   async componentDidUpdate(prevProps, prevState) {
-    const { query, page, perPage, showBtn, arrayImg } = this.state;
+    const { query, page, perPage } = this.state;
     if (prevState.page !== page || prevState.query !== query) {
       try {
         this.setState({
@@ -71,7 +70,12 @@ export class App extends Component {
   };
 
   handleSubmit = ({ query }) => {
-    this.setState({ query: query });
+    this.setState({
+      query: query,
+      page: 1,
+      arrayImg: [],
+      showBtn: false,
+    });
   };
 
   handleButtonLoadMore = () => {
@@ -81,8 +85,7 @@ export class App extends Component {
   };
 
   render() {
-    const { arrayImg, showModal, largeUrl, loader, perPage, showBtn } =
-      this.state;
+    const { arrayImg, showModal, largeUrl, loader, showBtn } = this.state;
     return (
       <Container>
         <Searchbar submit={this.handleSubmit}></Searchbar>

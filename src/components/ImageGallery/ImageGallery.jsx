@@ -11,6 +11,9 @@ export const ImageGallery = ({ images, сlick }) => {
   );
 };
 
+
+
+
 ImageGallery.propTypes = {
   images: PropTypes.array.isRequired,
 };

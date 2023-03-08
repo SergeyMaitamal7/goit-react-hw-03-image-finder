@@ -44,12 +44,24 @@ export class App extends Component {
             'Sorry, there are no images matching your search query. Please try again.'
           );
           return;
-        } else {
+        } else if (prevState.query !== query){
+          this.setState(({ arrayImg, showBtn }) => ({
+            arrayImg: [...hits],
+            showBtn: page < Math.ceil(totalHits / 12),
+          }));
+          return;
+        }
+        else if (prevState.page !== page) {
           this.setState(({ arrayImg, showBtn }) => ({
             arrayImg: [...prevState.arrayImg, ...hits],
             showBtn: page < Math.ceil(totalHits / 12),
-          }));
-        }
+          }));}
+          return
+          // else {
+          //   this.setState(({ arrayImg, showBtn }) => ({
+          //     arrayImg: [...prevState.arrayImg, ...hits],
+          //     showBtn: page < Math.ceil(totalHits / 12),
+          //   }));}
       } catch (error) {
         console.log(error);
       } finally {
@@ -69,11 +81,11 @@ export class App extends Component {
     this.setState({ largeUrl: image.largeImageURL, showModal: true });
   };
 
-  handleSubmit = ({ query }) => {
+  handleSubmit = ({ query, arrayImg }) => {
     this.setState({
       query: query,
       page: 1,
-      arrayImg: [],
+      arrayImg: arrayImg,
       showBtn: false,
     });
   };

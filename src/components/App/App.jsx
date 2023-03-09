@@ -44,11 +44,11 @@ export class App extends Component {
             'Sorry, there are no images matching your search query. Please try again.'
           );
           return;
-        } 
-          this.setState((prevState) => ({
-            arrayImg: [...prevState.arrayImg, ...hits],
-            showBtn: page < Math.ceil(totalHits / 12),
-          }))
+        }
+        this.setState(({ arrayImg }) => ({
+          arrayImg: [...arrayImg, ...hits],
+          showBtn: page < Math.ceil(totalHits / 12),
+        }));
       } catch (error) {
         console.log(error);
       } finally {
